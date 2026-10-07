@@ -1,0 +1,66 @@
+services:
+  fastapi_backend:
+    # method1 : Pull the already-built FastAPI image from GHCR
+    # image: ghcr.io/srujankn762/fast-api_kubernetes:latest
+
+    # Method 2: Build the Docker image locally using the Dockerfile
+    build:
+      # Folder Docker uses as the build context
+      # Build context => the folder Docker is allowed to see and use while building your image.
+      context: ./fastapi-hello-world
+      # Dockerfile used to build the image
+      dockerfile: Dockerfile
+
+    # Give the running container a readable name
+    container_name: fastapi-hello-world
+
+    # Map Machine port 8000 to container port 8000
+    ports:
+      - "8000:8000"
+
+    # Map local code directly into the container
+    volumes:
+      # Local machine's folder path : Container's folder path
+      - ./fastapi-hello-world/app:/app/app
+
+    # Restart the container automatically unless manually stopped
+    #restart: unless-stopped
+    # To run the server and reload it when the code is changed
+    command:
+      - uvicorn
+      - app.main:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --reload
+
+    depends_on:
+      - mysql_database
+
+  mysql_database:
+    # Official MySQL Docker image
+    image: mysql:8.4
+
+    # Initial database configuration
+    environment:
+      #Creating database customer_db
+      #Creating user fastapi_user
+      #Giving user fastapi_user access to schema customer_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: customer_db
+      MYSQL_USER: fastapi_user
+      MYSQL_PASSWORD: fastapi_password
+
+    # Machine port : Container port
+    ports:
+      - "3308:3306"
+
+    # Store MySQL database files in a persistent Docker volume
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+
+  # Named volume so MySQL data survives container recreation
+volumes:
+  mysql_data:
