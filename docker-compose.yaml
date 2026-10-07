@@ -21,7 +21,7 @@ services:
     # Map local code directly into the container
     volumes:
       # Local machine's folder path : Container's folder path
-      - ./fastapi-hello-world/app:/app/app
+      - ./fastapi-hello-world:/app
 
     # Restart the container automatically unless manually stopped
     #restart: unless-stopped
@@ -61,6 +61,6 @@ services:
       - mysql_data:/var/lib/mysql
 
 
-  # Named volume so MySQL data survives container recreation
+# Named volume so MySQL data survives container recreation
 volumes:
   mysql_data:
