@@ -1,2 +1,7 @@
 fastapi==0.142.2
 uvicorn==0.53.0
+SQLAlchemy==2.0.44
+PyMySQL==1.1.2
+alembic==1.17.2
+pydantic==2.12.5
+email-validator==2.3.0

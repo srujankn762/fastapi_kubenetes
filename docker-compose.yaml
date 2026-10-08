@@ -22,7 +22,9 @@ services:
     volumes:
       # Local machine's folder path : Container's folder path
       - ./fastapi-hello-world:/app
-
+    
+    environment:
+      DATABASE_URL: mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@mysql_database:3306/${MYSQL_DATABASE}
     # Restart the container automatically unless manually stopped
     #restart: unless-stopped
     # To run the server and reload it when the code is changed
@@ -47,10 +49,10 @@ services:
       #Creating database customer_db
       #Creating user fastapi_user
       #Giving user fastapi_user access to schema customer_db
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: customer_db
-      MYSQL_USER: fastapi_user
-      MYSQL_PASSWORD: fastapi_password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
     # Machine port : Container port
     ports:
@@ -61,6 +63,6 @@ services:
       - mysql_data:/var/lib/mysql
 
 
-# Named volume so MySQL data survives container recreation
+# Named volugit add .me so MySQL data survives container recreation
 volumes:
   mysql_data:
