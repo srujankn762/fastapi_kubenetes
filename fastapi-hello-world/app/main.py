@@ -5,10 +5,11 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.database import engine
 from app.routers.customer import router as customer_router
-
+from prometheus_fastapi_instrumentator import Instrumentator
 app = FastAPI(title="FastAPI Hello World", version="1.0.0")
 app.include_router(customer_router)
 
+Instrumentator().instrument(app).expose(app)
 @app.get("/")
 def read_root() -> dict[str, str]:
     return {"message": "Hello World from india karnataka"}

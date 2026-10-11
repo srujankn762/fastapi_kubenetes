@@ -62,7 +62,37 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
+  # Collects and stores FastAPI metrics
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    ports:
+      - "9090:9090"
+    volumes:
+      # Prometheus configuration
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
-# Named volugit add .me so MySQL data survives container recreation
+      # Persistent metrics storage
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+    restart: unless-stopped
+
+  # Visualizes metrics using dashboards
+  grafana:
+    image: grafana/grafana:12.1.1
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persistent dashboards and settings
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+# Persisted volumes
 volumes:
   mysql_data:
+  prometheus_data:
+  grafana_data:
+
