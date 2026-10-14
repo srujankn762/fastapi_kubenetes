@@ -1,0 +1,61 @@
+# Disable multi-tenant authentication for local development
+auth_enabled: false
+
+# Configure Loki's HTTP server
+server:
+  # Port used to receive logs and handle queries
+  http_listen_port: 3100
+
+# Common configuration shared across Loki components
+common:
+  # Base directory for Loki's local data
+  path_prefix: /loki
+
+  # Configure where Loki stores data
+  storage:
+    # Use the local filesystem for storage
+    filesystem:
+      # Directory for compressed log chunks
+      chunks_directory: /loki/chunks
+
+      # Directory for locally stored rule data
+      rules_directory: /loki/rules
+
+  # Store one replica of ingested log data
+  replication_factor: 1
+
+  # Configure the ring used to coordinate Ingesters
+  ring:
+    # Configure the ring's key-value store
+    kvstore:
+      # Keep ring coordination data in memory
+      store: inmemory
+
+# Define how Loki organizes and indexes log data
+schema_config:
+  # List of storage schemas
+  configs:
+    # Apply this schema to logs from January 1, 2024 onward
+    - from: "2024-01-01"
+
+      # Use Time series database (TSDB) for indexing log streams
+      store: tsdb
+
+      # Store log data on the local filesystem
+      object_store: filesystem
+
+      # Use Loki storage schema version 13
+      schema: v13
+
+      # Configure the TSDB index
+      index:
+        # Prefix used for index files
+        prefix: index_
+
+        # Organize indexes into 24-hour periods
+        period: 24h
+
+# Configure Loki's ingestion and query limits
+limits_config:
+  # Allow structured metadata such as request_id and trace_id
+  allow_structured_metadata: true

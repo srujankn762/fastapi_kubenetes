@@ -1,0 +1,34 @@
+// Discover running Docker containers
+discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+}
+
+// Select only the FastAPI container
+discovery.relabel "fastapi" {
+  targets = discovery.docker.containers.targets
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/fastapi-hello-world"
+    action        = "keep"
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "fastapi"
+  }
+}
+
+// Read FastAPI container logs
+loki.source.docker "fastapi" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.relabel.fastapi.output
+  forward_to = [loki.write.default.receiver]
+}
+
+// Forward collected logs to Loki
+loki.write "default" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
