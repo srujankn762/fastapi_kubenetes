@@ -32,3 +32,30 @@ loki.write "default" {
     url = "http://loki:3100/loki/api/v1/push"
   }
 }
+
+
+// Receive OpenTelemetry traces from FastAPI
+otelcol.receiver.otlp "default" {
+  grpc {
+    // Listen on port 4317 on all container interfaces
+    endpoint = "0.0.0.0:4317"
+  }
+
+  // Forward received traces to the Tempo exporter
+  output {
+    traces = [otelcol.exporter.otlp.tempo.input]
+  }
+}
+
+// Forward traces to Grafana Tempo
+otelcol.exporter.otlp "tempo" {
+  client {
+    // Tempo's internal OTLP/gRPC endpoint
+    endpoint = "tempo:4317"
+
+    // Disable TLS for internal local Docker communication
+    tls {
+      insecure = true
+    }
+  }
+}

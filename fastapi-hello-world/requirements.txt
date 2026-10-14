@@ -1,9 +1,28 @@
+# FastAPI application
 fastapi==0.142.2
 uvicorn==0.53.0
+
+# Database
 SQLAlchemy==2.0.44
 PyMySQL==1.1.2
 cryptography>=44,<47
 alembic==1.17.2
+
+# Validation
 pydantic==2.12.5
 email-validator==2.3.0
+
+# Prometheus metrics
 prometheus-fastapi-instrumentator==8.1.0
+
+# OpenTelemetry core SDK
+opentelemetry-sdk==1.45.1
+
+# FastAPI HTTP request tracing
+opentelemetry-instrumentation-fastapi==0.66b1
+
+# SQLAlchemy database query tracing
+opentelemetry-instrumentation-sqlalchemy==0.66b1
+
+# Export traces using OTLP
+opentelemetry-exporter-otlp==1.45.1
