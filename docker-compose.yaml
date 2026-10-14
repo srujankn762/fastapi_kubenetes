@@ -89,10 +89,48 @@ services:
     depends_on:
       - prometheus
     restart: unless-stopped
+  # Stores application logs
+  loki:
+    image: grafana/loki:3.5.0
+    ports:
+      # Other machines cannot normally access it directly through the host's network interfaces
+      - "127.0.0.1:3100:3100"
+    volumes:
+      # Loki configuration
+      - ./monitoring/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+
+      # Persistent log storage
+      - loki_data:/loki
+    command:
+      - "-config.file=/etc/loki/local-config.yaml"
+    restart: unless-stopped
+
+  # Collects Docker logs and forwards them to Loki
+  alloy:
+    image: grafana/alloy:v1.10.2
+    volumes:
+      # Alloy configuration
+      - ./monitoring/alloy/config.alloy:/etc/alloy/config.alloy:ro
+
+      # Read-only access to Docker API
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+      # Persistent Alloy state
+      - alloy_data:/var/lib/alloy/data
+    command:
+      - "run"
+      - "--storage.path=/var/lib/alloy/data"
+      - "/etc/alloy/config.alloy"
+    depends_on:
+      - loki
+    restart: unless-stopped
+
 
 # Persisted volumes
 volumes:
   mysql_data:
   prometheus_data:
   grafana_data:
+  loki_data:
+  alloy_data:
 
