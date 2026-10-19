@@ -1,0 +1,23 @@
+# Disable authentication for local development
+auth_enabled: false
+
+# Tempo HTTP API
+server:
+  http_listen_port: 3200
+
+# Receive OpenTelemetry traces
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: "0.0.0.0:4317"
+
+# Store traces locally
+storage:
+  trace:
+    backend: local
+    local:
+      path: /var/tempo/blocks
+    wal:
+      path: /var/tempo/wal

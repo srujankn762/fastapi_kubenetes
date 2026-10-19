@@ -125,6 +125,25 @@ services:
       - loki
     restart: unless-stopped
 
+  # Stores distributed traces from OpenTelemetry
+  tempo:
+    image: grafana/tempo:2.8.2
+
+    # Expose Tempo's HTTP API only on localhost
+    ports:
+      - "127.0.0.1:3200:3200"
+
+    # Mount Tempo configuration and persistent trace storage
+    volumes:
+      - ./monitoring/tempo/tempo-config.yml:/etc/tempo/tempo.yaml:ro
+      - tempo_data:/var/tempo
+
+    # Load Tempo configuration
+    command:
+      - "-config.file=/etc/tempo/tempo.yaml"
+
+    restart: unless-stopped
+
 
 # Persisted volumes
 volumes:
@@ -133,4 +152,5 @@ volumes:
   grafana_data:
   loki_data:
   alloy_data:
+  tempo_data:
 

@@ -20,7 +20,6 @@ def create_customer(
 
     # Add customer to the database session
     db.add(customer)
-
     # Commit INSERT transaction to MySQL
     db.commit()
 

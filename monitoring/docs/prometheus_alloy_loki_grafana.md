@@ -178,9 +178,9 @@ docker compose down
 
 ## Related configuration
 
-- [Docker Compose definition](../docker-compose.yaml)
-- [Prometheus configuration](prometheus/prometheus.yml)
-- [Loki configuration](loki/loki-config.yml)
-- [Grafana Alloy configuration](alloy/config.alloy)
-- [FastAPI instrumentation](../fastapi-hello-world/app/main.py)
+- [Docker Compose definition](../../docker-compose.yaml)
+- [Prometheus configuration](../prometheus/prometheus.yml)
+- [Loki configuration](../loki/loki-config.yml)
+- [Grafana Alloy configuration](../alloy/config.alloy)
+- [FastAPI instrumentation](../../fastapi-hello-world/app/main.py)
 

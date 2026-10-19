@@ -6,10 +6,21 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.database import engine
 from app.routers.customer import router as customer_router
 from prometheus_fastapi_instrumentator import Instrumentator
+from app.telemetry import setup_telemetry
+
+
 app = FastAPI(title="FastAPI Hello World", version="1.0.0")
+
+# Register customer API routes
 app.include_router(customer_router)
 
+# Expose Prometheus metrics at /metrics
 Instrumentator().instrument(app).expose(app)
+
+# Enable OpenTelemetry tracing for FastAPI and SQLAlchemy
+setup_telemetry(app, engine)
+
+
 @app.get("/")
 def read_root() -> dict[str, str]:
     return {"message": "Hello World from india karnataka"}
