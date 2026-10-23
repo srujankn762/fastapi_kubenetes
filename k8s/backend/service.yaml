@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-backend-service
+  namespace: fastapi-app
+spec:
+  # Internal endpoint for port-forwarding and Kubernetes service discovery.
+  type: ClusterIP
+  selector:
+    app: fastapi-backend
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+      protocol: TCP

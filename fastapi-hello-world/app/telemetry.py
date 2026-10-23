@@ -1,3 +1,5 @@
+import os
+
 from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
@@ -20,7 +22,7 @@ def setup_telemetry(app, engine):
 
     # Export traces to Grafana Alloy using OTLP/gRPC
     exporter = OTLPSpanExporter(
-        endpoint="http://alloy:4317",
+        endpoint=os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://alloy:4317"),
         insecure=True,
     )
 
@@ -43,3 +45,4 @@ def setup_telemetry(app, engine):
         engine=engine,
         tracer_provider=provider,
     )
+import os

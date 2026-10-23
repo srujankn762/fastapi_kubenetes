@@ -6,8 +6,7 @@ scrape_configs:
     metrics_path: /metrics
     static_configs:
       - targets:
-          - "fastapi_backend:8000"
+          - "host.docker.internal:8001"
 
-# Why fastapi_backend:8000 instead of localhost:8000?
-# Prometheus runs inside its own Docker container.
-# It must connect to FastAPI using the Docker Compose service name.
+# In Kubernetes mode, keep `kubectl port-forward --address 0.0.0.0` running
+# on host port 8001; Docker Desktop containers reach the host via this name.

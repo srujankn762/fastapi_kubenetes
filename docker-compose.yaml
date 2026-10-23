@@ -1,5 +1,6 @@
 services:
   fastapi_backend:
+    profiles: [compose-backend]
     # method1 : Pull the already-built FastAPI image from GHCR
     # image: ghcr.io/srujankn762/fast-api_kubernetes:latest
 
@@ -108,6 +109,9 @@ services:
   # Collects Docker logs and forwards them to Loki
   alloy:
     image: grafana/alloy:v1.10.2
+    ports:
+      # OTLP receiver for Docker Desktop Kubernetes; host.docker.internal:4317
+      - "4317:4317"
     volumes:
       # Alloy configuration
       - ./monitoring/alloy/config.alloy:/etc/alloy/config.alloy:ro
@@ -153,4 +157,3 @@ volumes:
   loki_data:
   alloy_data:
   tempo_data:
-
